@@ -37,5 +37,5 @@ jobs:
             git fetch --all &&
             git reset --hard origin/master &&
             git pull origin master &&
-            pm2 start server.js
+            sudo pm2 start server.js
           '
