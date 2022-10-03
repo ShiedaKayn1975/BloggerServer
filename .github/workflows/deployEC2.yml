@@ -20,8 +20,8 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-            DIR="/home/ubuntu/projects/blogger"
-            pm2 delete all
+            DIR="/home/ubuntu/projects/blogger" &&
+            pm2 delete all &&
             cd /home/ubuntu/projects
             if [ ! -d $DIR ]
             then
