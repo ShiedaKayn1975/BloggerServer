@@ -4,8 +4,18 @@ sudo pm2 kill
 echo "Jump to app folder"
 cd /home/ubuntu/projects
 
-echo "Update app from Git"
-git pull
+echo "Create project if not existed"
+if [ ! -d $DIR ]
+then
+  mkdir blogger &&
+  git clone https://github.com/ShiedaKayn1975/BloggerServer.git blogger &&
+  cd blogger &&
+  npm i
+else
+  cd blogger
+  echo "Update app from Git"
+  git pull
+fi
 
 echo "Install app dependencies"
 sudo rm -rf node_modules package-lock.json
