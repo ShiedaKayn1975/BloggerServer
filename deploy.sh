@@ -1,21 +1,11 @@
 echo "Kill all the running PM2 actions"
-sudo pm2 kill
+pm2 delete all
 
 echo "Jump to app folder"
-cd /home/ubuntu/projects
+cd /home/ubuntu/projects/blogger
 
-echo "Create project if not existed"
-if [ ! -d $DIR ]
-then
-  mkdir blogger &&
-  git clone https://github.com/ShiedaKayn1975/BloggerServer.git blogger &&
-  cd blogger &&
-  npm i
-else
-  cd blogger
-  echo "Update app from Git"
-  git pull
-fi
+echo "Update app from Git"
+git pull
 
 echo "Install app dependencies"
 sudo rm -rf node_modules package-lock.json
