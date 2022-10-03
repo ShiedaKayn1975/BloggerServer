@@ -1,35 +1,43 @@
-name: Workflow for Deploy Blog Server to EC2
+name: Workflow to deploy Blog server to EC2
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
+    
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    if: github.ref == 'refs/heads/master'
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
-      - name: Checking out code
-        uses: actions/checkout@v3
-      - name: Installing Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-      - name: Installing dependencies
-        run: npm install
-      - name: Building project
-        run: CI=false npm run build
-      - name: Deploy to Server
-        uses: burnett01/rsync-deployments@5.1
-        with:
-          switches: -avzr --delete
-          path: ./*
-          remote_path: "${{ secrets.TARGET_DIR }}"
-          remote_host: "${{ secrets.HOST_DNS }}"
-          remote_user: "${{ secrets.USERNAME }}"
-          remote_key:  "${{ secrets.EC2_SSH_KEY }}"
+      - uses: actions/checkout@v3
+      - name: Deploy in EC2
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY  }}
+          HOST_DNS : ${{ secrets.HOST_DNS  }}
+          TARGET_DIR : ${{ secrets.TARGET_DIR  }}
+          USERNAME: ${{ secrets.USERNAME  }}
+        run: |
+          echo "$EC2_SSH_KEY" > ssh_key && chmod 600 ssh_key
+          ssh -o StrictHostKeyChecking=no -i ssh_key ${USERNAME}@${HOST_DNS} '
+            DIR="/home/$USERNAME/$TARGET_DIR"
+            pm2 delete all
+            cd /home/ec2-user
+            
+            if [ ! -d $DIR ]
+            then
+              mkdir server &&
+              git clone https://github.com/CodePanthers/node-aws-ec2-github-actions.git server &&
+              cd server &&
+              npm i
+            else
+              cd server
+            fi
+            
+            git checkout master &&
+            git fetch --all &&
+            git reset --hard origin/master &&
+            git pull origin master &&
+            pm2 start app.js
+          '
+          
