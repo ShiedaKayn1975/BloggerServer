@@ -16,12 +16,14 @@ jobs:
     steps:
       - name: Checking out code
         uses: actions/checkout@v3
-
-      - name: Setup environment
-        run: npm ci
-        run: npm run build
-        run: npm run test
-
+      - name: Installing Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Installing dependencies
+        run: npm install
+      - name: Building project
+        run: CI=false npm run build
       - name: Deploy to Server
         uses: burnett01/rsync-deployments@5.1
         with:
