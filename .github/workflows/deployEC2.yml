@@ -10,34 +10,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Deploy in EC2
-        env:
-          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY  }}
-          HOST_DNS : ${{ secrets.HOST_DNS  }}
-          TARGET_DIR : ${{ secrets.TARGET_DIR  }}
-          USERNAME: ${{ secrets.USERNAME  }}
-        run: |
-          echo "$EC2_SSH_KEY" > ssh_key && chmod 600 ssh_key
-          ssh -o StrictHostKeyChecking=no -i ssh_key ${USERNAME}@${HOST_DNS} '
-            DIR="/home/$USERNAME/$TARGET_DIR"
-            pm2 delete all
-            cd /home/${USERNAME}
-            
-            if [ ! -d $DIR ]
-            then
-              mkdir server &&
-              git clone https://github.com/ShiedaKayn1975/BloggerServer.git server &&
-              cd server &&
-              npm i
-            else
-              cd server
-            fi
-            
-            git checkout master &&
-            git fetch --all &&
-            git reset --hard origin/master &&
-            git pull origin master &&
-            pm2 start server.js
-          '
-          
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: sh deploy.sh
