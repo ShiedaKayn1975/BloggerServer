@@ -19,4 +19,17 @@ jobs:
           TARGET_DIR: ${{ secrets.TARGET_DIR }}
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            DIR="/home/ubuntu/projects/blogger"
+            pm2 delete all
+            cd /home/ubuntu/projects
+            if [ ! -d $DIR ]
+            then
+              mkdir blogger &&
+              git clone https://github.com/ShiedaKayn1975/BloggerServer.git blogger &&
+              cd blogger &&
+              npm i
+            else
+              cd blogger
+            fi
+          '
