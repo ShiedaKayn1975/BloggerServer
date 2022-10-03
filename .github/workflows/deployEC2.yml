@@ -1,19 +1,22 @@
-name: Workflow to deploy Blog server to EC2
+name: Workflow to deploy blog server to EC2 instance
 on:
   push:
     branches: [ master ]
     
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: executing remote ssh commands using ssh key
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST_DNS }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: sh deploy.sh
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Deploy in EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY  }}
+          HOSTNAME : ${{ secrets.HOST_DNS  }}
+          USER_NAME : ${{ secrets.USERNAME  }}
+          TARGET_DIR: ${{ secrets.TARGET_DIR }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
