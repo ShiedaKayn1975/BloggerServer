@@ -16,8 +16,10 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            bash -l -c "pm2 delete all"
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            pm2 delete all
             cd /home/ubuntu/projects/blogger
             git pull origin master
-            bash -l -c "npm install"
-            bash -l -c "pm2 start server.js"
+            npm install
+            pm2 start server.js
