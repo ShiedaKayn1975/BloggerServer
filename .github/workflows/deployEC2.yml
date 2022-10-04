@@ -21,4 +21,4 @@ jobs:
             cd /home/ubuntu/projects/blogger
             git pull origin master
             npm install
-            npm run start_prod
+            screen npm run start_prod
