@@ -1,5 +1,5 @@
 {
-  "name": "rockingblogger",
+  "name": "blogger",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kanhaiya-2000/RockingBlogger.git"
+    "url": "git+https://github.com/ShiedaKayn1975/BloggerServer.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kanhaiya-2000/RockingBlogger/issues"
+    "url": "https://github.com/ShiedaKayn1975/BloggerServer/issues"
   },
-  "homepage": "https://github.com/kanhaiya-2000/RockingBlogger#readme",
+  "homepage": "https://github.com/ShiedaKayn1975/BloggerServer#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
