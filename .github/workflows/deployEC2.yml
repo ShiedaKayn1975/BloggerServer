@@ -37,5 +37,5 @@ jobs:
             git fetch --all
             git reset --hard origin/master
             git pull origin master
-            npm start_prod
+            npm run start_prod
           '
