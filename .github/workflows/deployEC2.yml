@@ -8,35 +8,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
-      - name: Deploy in EC2
-        env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY  }}
-          HOSTNAME : ${{ secrets.HOST_DNS  }}
-          USER_NAME : ${{ secrets.USERNAME  }}
-          TARGET_DIR: ${{ secrets.TARGET_DIR }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-            bash -l -c
-            DIR="/home/ubuntu/projects/blogger"
-            bash -l -c "pm2 delete all"
-            cd /home/ubuntu/projects
-            if [ ! -d $DIR ]
-            then
-              mkdir blogger &&
-              git clone https://github.com/ShiedaKayn1975/BloggerServer.git blogger &&
-              cd blogger &&
-              npm i
-            else
-              cd blogger
-            fi
-
-            git checkout master
-            git fetch --all
-            git reset --hard origin/master
-            git pull origin master
-            bash -l -c "npm run start_prod"
-          '
+      - name: SSH and deploy node app
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_DNS }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        port: 22
+        script: |
+          pm2 delete all
+          cd /home/ubuntu/projects/blogger
+          git pull origin master
+          npm install
+          pm2 start server.js
