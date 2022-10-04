@@ -18,8 +18,7 @@ jobs:
           script: |
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            pm2 delete all
             cd /home/ubuntu/projects/blogger
             git pull origin master
             npm install
-            pm2 start server.js
+            npm run start_prod
