@@ -16,8 +16,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            pm2 delete all
+            bash -l -c "pm2 delete all"
             cd /home/ubuntu/projects/blogger
             git pull origin master
-            npm install
-            pm2 start server.js
+            bash -l -c "npm install"
+            bash -l -c "pm2 start server.js"
