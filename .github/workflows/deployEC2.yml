@@ -20,8 +20,9 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            bash -l -c
             DIR="/home/ubuntu/projects/blogger"
-            pm2 delete all
+            bash -l -c "pm2 delete all"
             cd /home/ubuntu/projects
             if [ ! -d $DIR ]
             then
@@ -37,5 +38,5 @@ jobs:
             git fetch --all
             git reset --hard origin/master
             git pull origin master
-            npm run start_prod
+            bash -l -c "npm run start_prod"
           '
