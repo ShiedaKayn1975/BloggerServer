@@ -14,12 +14,13 @@ const DB = require("./utils/db");
 const app = express();
 
 app.use(express.json());
-app.use(cors({origin: process.env.NODE_ENV == 'production' ? process.env.SERVER_URL : "*"}));
+app.use(cors());
 app.use(helmet.frameguard({ action: 'DENY' }));
 app.use(function (req, res, next) {
     //res.setHeader('Access-Control-Allow-Origin', "*");
     if (process.env.NODE_ENV == "production"){      
-      res.setHeader('Access-Control-Allow-Origin', process.env.SERVER_URL);
+      // res.setHeader('Access-Control-Allow-Origin', process.env.SERVER_URL);
+      res.setHeader('Access-Control-Allow-Origin', "*");
       app.use(express.static('client/build'));
       const path = require('path');
       app.get('*', (req, res) => {
