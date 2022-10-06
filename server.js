@@ -14,7 +14,7 @@ const DB = require("./utils/db");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin: process.env.NODE_ENV == 'production' ? process.env.SERVER_URL : "*"}));
 app.use(helmet.frameguard({ action: 'DENY' }));
 app.use(function (req, res, next) {
     //res.setHeader('Access-Control-Allow-Origin', "*");
