@@ -27,9 +27,9 @@ app.use(function (req, res, next) {
       res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'), { lastModified: false });
   })
     }
-    if ((req.get('X-Forwarded-Proto') !== 'https' && process.env.NODE_ENV == "production")) {
-      res.redirect('https://' + req.get('Host') + req.url);
-    }
+    // if ((req.get('X-Forwarded-Proto') !== 'https' && process.env.NODE_ENV == "production")) {
+    //   res.redirect('https://' + req.get('Host') + req.url);
+    // }
     else{
       next();
     }
